@@ -1,6 +1,7 @@
 package main
 
 import (
+	database "github.com/alprnemn/yollapi/internal/db"
 	"github.com/alprnemn/yollapi/internal/env"
 	"log"
 )
@@ -12,4 +13,10 @@ func main() {
 
 	mux := app.mount()
 	log.Fatal(app.run(mux))
+}
+
+func init() {
+	db, err := database.New(
+		env.Envs.Address,
+	)
 }
