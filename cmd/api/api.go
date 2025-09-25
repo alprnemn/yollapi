@@ -1,8 +1,10 @@
 package main
 
 import (
+	"database/sql"
 	"errors"
 	"github.com/alprnemn/yollapi/internal/env"
+	"github.com/alprnemn/yollapi/internal/store"
 	chi "github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
@@ -13,6 +15,8 @@ import (
 
 type api struct {
 	Config env.Config
+	Store  *store.Storage
+	db     *sql.DB
 }
 
 func (app *api) mount() http.Handler {
@@ -37,6 +41,11 @@ func (app *api) mount() http.Handler {
 	// v1
 	r.Route("/v1", func(r chi.Router) {
 		r.Get("/health", app.healthCheckHandler)
+
+		r.Route("/users", func(r chi.Router) {
+			r.Post("/register", app.registerUserHandler)
+		})
+
 	})
 	return r
 }
