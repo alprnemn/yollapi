@@ -3,8 +3,9 @@ package main
 import (
 	"database/sql"
 	"errors"
-	"github.com/alprnemn/yollapi/internal/env"
-	"github.com/alprnemn/yollapi/internal/store"
+	cfg "github.com/alprnemn/yollapi/internal/config"
+	"github.com/alprnemn/yollapi/internal/repository"
+	"github.com/alprnemn/yollapi/internal/service"
 	chi "github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
@@ -14,9 +15,10 @@ import (
 )
 
 type api struct {
-	Config env.Config
-	Store  *store.Storage
-	db     *sql.DB
+	Config     cfg.Config
+	Repository *repository.Repository
+	Service    *service.Service
+	Db         *sql.DB
 }
 
 func (app *api) mount() http.Handler {
@@ -29,7 +31,7 @@ func (app *api) mount() http.Handler {
 
 	// put cors middleware before the rate limiter
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{env.Envs.CORS.AllowedOrigin},
+		AllowedOrigins:   []string{cfg.Envs.CORS.AllowedOrigin},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},

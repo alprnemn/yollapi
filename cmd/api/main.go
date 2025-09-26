@@ -1,30 +1,33 @@
 package main
 
 import (
+	"github.com/alprnemn/yollapi/internal/config"
 	database "github.com/alprnemn/yollapi/internal/db"
-	"github.com/alprnemn/yollapi/internal/env"
-	"github.com/alprnemn/yollapi/internal/store"
+	"github.com/alprnemn/yollapi/internal/repository"
+	"github.com/alprnemn/yollapi/internal/service"
 	"log"
 )
 
 func main() {
 	db, err := database.New(
-		env.Envs.DbConfig.Address,
-		env.Envs.DbConfig.MaxOpenConns,
-		env.Envs.DbConfig.MaxIdleConns,
-		env.Envs.DbConfig.MaxIdleTime,
+		config.Envs.DbConfig.Address,
+		config.Envs.DbConfig.MaxOpenConns,
+		config.Envs.DbConfig.MaxIdleConns,
+		config.Envs.DbConfig.MaxIdleTime,
 	)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	store := store.NewStorage(db)
+	repo := repository.NewRepository(db)
+	services := service.NewService(repo)
 
 	app := &api{
-		Config: env.Envs,
-		Store:  store,
-		db:     db,
+		Config:     config.Envs,
+		Repository: repo,
+		Service:    services,
+		Db:         db,
 	}
 
 	mux := app.mount()
