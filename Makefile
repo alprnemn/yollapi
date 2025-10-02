@@ -32,5 +32,10 @@ migrate-up:
 migrate-down:
 	@migrate -path=$(MIGRATIONS_PATH) -database=$(DB_ADDR) down $(step)
 
+.PHONY: migrate-drop
+migrate-drop:
+	@migrate -path=$(MIGRATIONS_PATH) -database=$(DB_ADDR) drop
+
+
 migrate-force:
 	@migrate -path=$(MIGRATIONS_PATH) -database=$(DB_ADDR) force $(version)

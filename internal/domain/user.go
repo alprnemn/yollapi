@@ -7,7 +7,7 @@ type User struct {
 	Username  string `json:"username,omitempty"`
 	Phone     string `json:"phone,omitempty"`
 	Email     string `json:"email,omitempty"`
-	Age       int    `json:"age,omitempty"`
+	Age       uint8  `json:"age,omitempty"`
 	Password  string `json:"password,omitempty"`
 	CreatedAt string `json:"created-at,omitempty"`
 }

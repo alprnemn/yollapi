@@ -1,0 +1,31 @@
+package utils
+
+import (
+	"log"
+	"net/http"
+)
+
+func InternalServerError(w http.ResponseWriter, req *http.Request, err error) {
+	log.Printf("internal server error: %s path: %s error: %s", req.Method, req.URL.Path, err.Error())
+	WriteError(w, http.StatusInternalServerError, err.Error())
+}
+
+func BadRequestResponse(w http.ResponseWriter, req *http.Request, err error) {
+	log.Printf("bad request error: %s path: %s error: %s", req.Method, req.URL.Path, err)
+	WriteError(w, http.StatusBadRequest, err.Error())
+}
+
+func DatabaseError(w http.ResponseWriter, req *http.Request, err error) {
+	log.Printf("db error: %s path: %s error: %s", req.Method, req.URL.Path, err.Error())
+	WriteError(w, http.StatusInternalServerError, err.Error())
+}
+
+func NotFoundError(w http.ResponseWriter, req *http.Request, err error) {
+	log.Printf("not found error: %s path: %s error: %s", req.Method, req.URL.Path, err)
+	WriteError(w, http.StatusNotFound, err.Error())
+}
+
+func ConflictError(w http.ResponseWriter, req *http.Request, err error) {
+	log.Printf("conflict error: %s path: %s error: %s", req.Method, req.URL.Path, err)
+	WriteError(w, http.StatusConflict, err.Error())
+}

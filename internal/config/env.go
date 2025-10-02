@@ -1,12 +1,14 @@
 package config
 
 import (
-	"github.com/lpernett/godotenv"
 	"log"
+
+	"github.com/lpernett/godotenv"
 )
 
 type Config struct {
 	Address  string
+	ApiURL   string
 	Env      string
 	DbConfig DbConfig
 	CORS     CorsConfig
@@ -35,6 +37,7 @@ func initConfig() Config {
 
 	return Config{
 		Address: GetString("ADDRESS", ":8080"),
+		ApiURL:  GetString("PUBLIC_HOST", "http://127.0.0.1"),
 		Env:     "deployment",
 		DbConfig: DbConfig{
 			Address:      GetString("DB_ADDR", "postgres://user:adminpassword@localhost/yollapi?sslmode=disable"),

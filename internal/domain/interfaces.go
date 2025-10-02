@@ -1,13 +1,17 @@
 package domain
 
-import "context"
+import (
+	"context"
+	cmn "github.com/alprnemn/yollapi/common"
+)
 
 type IUserRepository interface {
 	Create(ctx context.Context, user *User) error
+	GetByEmail(ctx context.Context, email string) (*User, error)
 }
 
 type IUserService interface {
-	Register(ctx context.Context, user *User) error
+	Register(ctx context.Context, user *User) *cmn.ErrorResponse
 }
 
 type IProductRepository interface {

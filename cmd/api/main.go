@@ -5,9 +5,16 @@ import (
 	database "github.com/alprnemn/yollapi/internal/db"
 	"github.com/alprnemn/yollapi/internal/repository"
 	"github.com/alprnemn/yollapi/internal/service"
+
 	"log"
 )
 
+const version = "1.1.0"
+
+// @title			Yolla Api
+// @version		1.1.0
+// @description	This is an Api for Yolla App
+// @termsOfService	http://swagger.io/terms/
 func main() {
 	db, err := database.New(
 		config.Envs.DbConfig.Address,

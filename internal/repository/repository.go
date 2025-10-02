@@ -3,10 +3,11 @@ package repository
 import (
 	"database/sql"
 	"errors"
+	"time"
+
 	"github.com/alprnemn/yollapi/internal/domain"
 	pr "github.com/alprnemn/yollapi/internal/repository/productrepository"
 	ur "github.com/alprnemn/yollapi/internal/repository/userrepository"
-	"time"
 )
 
 var (

@@ -3,15 +3,18 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"log"
+	"net/http"
+	"time"
+
+	_ "github.com/alprnemn/yollapi/docs"
 	cfg "github.com/alprnemn/yollapi/internal/config"
 	"github.com/alprnemn/yollapi/internal/repository"
 	"github.com/alprnemn/yollapi/internal/service"
 	chi "github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
-	"log"
-	"net/http"
-	"time"
+	httpSwagger "github.com/swaggo/http-swagger/v2"
 )
 
 type api struct {
@@ -44,6 +47,9 @@ func (app *api) mount() http.Handler {
 	r.Route("/v1", func(r chi.Router) {
 		r.Get("/health", app.healthCheckHandler)
 
+		//docsURL := "http://127.0.0.1:8080/swagger/doc.json"
+		r.Handle("/swagger/*", httpSwagger.WrapHandler)
+
 		r.Route("/users", func(r chi.Router) {
 			r.Post("/register", app.registerUserHandler)
 		})
@@ -53,6 +59,7 @@ func (app *api) mount() http.Handler {
 }
 
 func (app *api) run(mux http.Handler) error {
+
 	server := &http.Server{
 		Addr:         app.Config.Address,
 		Handler:      mux,
