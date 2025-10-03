@@ -1,8 +1,9 @@
 package main
 
 import (
-	u "github.com/alprnemn/yollapi/cmd/api/utils"
 	"net/http"
+
+	u "github.com/alprnemn/yollapi/cmd/api/utils"
 
 	cmn "github.com/alprnemn/yollapi/common"
 	"github.com/alprnemn/yollapi/internal/domain"
@@ -59,6 +60,33 @@ func (app *api) registerUserHandler(w http.ResponseWriter, req *http.Request) {
 	if err := u.WriteJSON(w, http.StatusCreated, cmn.MessageResponse{
 		Message: "user created successfully",
 	}); err != nil {
+		u.InternalServerError(w, req, err)
+		return
+	}
+
+}
+
+// getUsersHandler godoc
+//
+//	@Summary		Get all users
+//	@Description	Gets all users from db
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{string}	[]domain.User
+//	@Failure		500	{string}	string	"Internal Server Error"
+//	@Router			/v1/users [get]
+func (app *api) getUsersHandler(w http.ResponseWriter, req *http.Request) {
+
+	ctx := req.Context()
+
+	users, err := app.Service.User.GetAllUsers(ctx)
+	if err != nil {
+		u.DatabaseError(w, req, err)
+		return
+	}
+
+	if err := u.WriteJSON(w, http.StatusOK, users); err != nil {
 		u.InternalServerError(w, req, err)
 		return
 	}

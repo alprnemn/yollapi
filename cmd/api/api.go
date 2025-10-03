@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"github.com/alprnemn/yollapi/internal/ratelimiter"
 	"log"
 	"net/http"
 	"time"
@@ -18,10 +19,11 @@ import (
 )
 
 type api struct {
-	Config     cfg.Config
-	Repository *repository.Repository
-	Service    *service.Service
-	Db         *sql.DB
+	Config      cfg.Config
+	Repository  *repository.Repository
+	Service     *service.Service
+	Db          *sql.DB
+	RateLimiter *ratelimiter.FixedWindowRateLimiter
 }
 
 func (app *api) mount() http.Handler {
@@ -31,6 +33,7 @@ func (app *api) mount() http.Handler {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+	r.Use(app.RateLimiterMiddleware)
 
 	// put cors middleware before the rate limiter
 	r.Use(cors.Handler(cors.Options{
@@ -41,7 +44,6 @@ func (app *api) mount() http.Handler {
 		AllowCredentials: false,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
-	// r.Use(app.RateLimiterMiddleware)
 
 	// v1
 	r.Route("/v1", func(r chi.Router) {
@@ -52,6 +54,7 @@ func (app *api) mount() http.Handler {
 
 		r.Route("/users", func(r chi.Router) {
 			r.Post("/register", app.registerUserHandler)
+			r.Get("/", app.getUsersHandler)
 		})
 
 	})

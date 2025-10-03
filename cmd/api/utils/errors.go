@@ -29,3 +29,9 @@ func ConflictError(w http.ResponseWriter, req *http.Request, err error) {
 	log.Printf("conflict error: %s path: %s error: %s", req.Method, req.URL.Path, err)
 	WriteError(w, http.StatusConflict, err.Error())
 }
+
+func RateLimitExceededError(w http.ResponseWriter, r *http.Request, retryAfter string) {
+	log.Print("rate limit exceeded", "method", r.Method, "path", r.URL.Path)
+	w.Header().Set("Retry-After", retryAfter)
+	WriteError(w, http.StatusTooManyRequests, "rate limit exceeded, retry after: "+retryAfter)
+}

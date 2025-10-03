@@ -43,6 +43,25 @@ info:
   title: Yolla Api
   version: 1.1.0
 paths:
+  /v1/users:
+    get:
+      consumes:
+      - application/json
+      description: Gets all users from db
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get all users
+      tags:
+      - users
   /v1/users/register:
     post:
       consumes:

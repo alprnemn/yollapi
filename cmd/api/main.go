@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/alprnemn/yollapi/internal/config"
+	cfg "github.com/alprnemn/yollapi/internal/config"
 	database "github.com/alprnemn/yollapi/internal/db"
+	"github.com/alprnemn/yollapi/internal/ratelimiter"
 	"github.com/alprnemn/yollapi/internal/repository"
 	"github.com/alprnemn/yollapi/internal/service"
 
@@ -17,24 +18,30 @@ const version = "1.1.0"
 // @termsOfService	http://swagger.io/terms/
 func main() {
 	db, err := database.New(
-		config.Envs.DbConfig.Address,
-		config.Envs.DbConfig.MaxOpenConns,
-		config.Envs.DbConfig.MaxIdleConns,
-		config.Envs.DbConfig.MaxIdleTime,
+		cfg.Envs.DbConfig.Address,
+		cfg.Envs.DbConfig.MaxOpenConns,
+		cfg.Envs.DbConfig.MaxIdleConns,
+		cfg.Envs.DbConfig.MaxIdleTime,
 	)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
+	rateLimiter := ratelimiter.NewFixedWindowRateLimiter(
+		cfg.Envs.RateLimiter.RequestsPerTimeFrame,
+		cfg.Envs.RateLimiter.TimeFrame,
+	)
+
 	repo := repository.NewRepository(db)
 	services := service.NewService(repo)
 
 	app := &api{
-		Config:     config.Envs,
-		Repository: repo,
-		Service:    services,
-		Db:         db,
+		Config:      cfg.Envs,
+		Repository:  repo,
+		Service:     services,
+		Db:          db,
+		RateLimiter: rateLimiter,
 	}
 
 	mux := app.mount()

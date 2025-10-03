@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"time"
 
 	cmn "github.com/alprnemn/yollapi/common"
 	"github.com/alprnemn/yollapi/internal/domain"
@@ -31,7 +30,7 @@ func (repo *UserRepository) Create(ctx context.Context, user *domain.User) error
     $1, $2, $3, $4, $5, $6, $7
 	)`
 
-	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
+	ctx, cancel := context.WithTimeout(ctx, cmn.QueryTimeoutDuration)
 	defer cancel()
 
 	_, err := repo.Db.ExecContext(ctx,
@@ -62,24 +61,21 @@ func (repo *UserRepository) Create(ctx context.Context, user *domain.User) error
 	return nil
 }
 
-func (repo *UserRepository) GetByEmail(ctx context.Context, email string) (*domain.User, error) {
+func (repo *UserRepository) GetAllUsers(ctx context.Context) ([]domain.User, error) {
 
-	query := `
-		SELECT  username, first_name, last_name, email, phone
-		FROM users
-		WHERE email = $1
-	`
-	user := &domain.User{}
-	err := repo.Db.QueryRowContext(ctx, query, email).Scan(
-		&user.Username,
-		&user.FirstName,
-		&user.LastName,
-		&user.Email,
-		&user.Phone,
-	)
+	query := `SELECT  username, first_name, last_name, email, phone FROM users`
 
+	ctx, cancel := context.WithTimeout(ctx, cmn.QueryTimeoutDuration)
+	defer cancel()
+
+	rows, err := repo.Db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
 	}
-	return user, nil
+
+	users, err := extractUsersFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
 }

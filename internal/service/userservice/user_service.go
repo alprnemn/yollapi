@@ -2,6 +2,7 @@ package userservice
 
 import (
 	"context"
+
 	cmn "github.com/alprnemn/yollapi/common"
 	"github.com/alprnemn/yollapi/internal/domain"
 )
@@ -16,4 +17,14 @@ func (service *UserService) Register(ctx context.Context, user *domain.User) *cm
 		return handleErrorRegister(err)
 	}
 	return nil
+}
+
+func (service *UserService) GetAllUsers(ctx context.Context) ([]domain.User, error) {
+
+	users, err := service.Repo.GetAllUsers(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
 }

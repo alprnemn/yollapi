@@ -2,7 +2,6 @@ package common
 
 import (
 	"errors"
-	"time"
 )
 
 type ErrorResponse struct {
@@ -15,12 +14,9 @@ func (e *ErrorResponse) Error() string {
 }
 
 var (
-	ErrNotFound = errors.New("record not found")
-	ErrConflict = errors.New("resource already exists")
-
+	ErrNotFound          = errors.New("record not found")
+	ErrConflict          = errors.New("resource already exists")
 	ErrDuplicateUsername = errors.New("username already exists")
 	ErrDuplicateEmail    = errors.New("email already exists")
 	ErrDuplicatePhone    = errors.New("phone already exists")
-
-	QueryTimeoutDuration = time.Second * 5
 )

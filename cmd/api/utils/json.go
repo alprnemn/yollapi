@@ -4,16 +4,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/alprnemn/yollapi/common"
 	"io"
 	"net/http"
-)
 
-const maxBytes = 1 << 20
+	cmn "github.com/alprnemn/yollapi/common"
+)
 
 func ParseJSON(w http.ResponseWriter, req *http.Request, data any) error {
 
-	req.Body = http.MaxBytesReader(w, req.Body, int64(maxBytes))
+	req.Body = http.MaxBytesReader(w, req.Body, int64(cmn.MaxBytes))
 
 	if req.Body == nil {
 		return fmt.Errorf("missing request body")
@@ -52,7 +51,7 @@ func ParseJSON(w http.ResponseWriter, req *http.Request, data any) error {
 }
 
 func WriteError(w http.ResponseWriter, status int, message string) {
-	resp := common.ErrorResponse{
+	resp := cmn.ErrorResponse{
 		Code:    status,
 		Message: message,
 	}

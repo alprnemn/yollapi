@@ -2,8 +2,9 @@ package userservice
 
 import (
 	"errors"
-	cmn "github.com/alprnemn/yollapi/common"
 	"net/http"
+
+	cmn "github.com/alprnemn/yollapi/common"
 )
 
 func handleErrorRegister(err error) *cmn.ErrorResponse {

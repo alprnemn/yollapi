@@ -2,20 +2,10 @@ package repository
 
 import (
 	"database/sql"
-	"errors"
-	"time"
 
 	"github.com/alprnemn/yollapi/internal/domain"
 	pr "github.com/alprnemn/yollapi/internal/repository/productrepository"
 	ur "github.com/alprnemn/yollapi/internal/repository/userrepository"
-)
-
-var (
-	ErrNotFound          = errors.New("record not found")
-	ErrConflict          = errors.New("resource already exists")
-	ErrDuplicateUsername = errors.New("username already exists")
-	ErrDuplicateEmail    = errors.New("email already exists")
-	QueryTimeoutDuration = time.Second * 5
 )
 
 type Repository struct {
