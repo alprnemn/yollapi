@@ -38,3 +38,7 @@ func GetBool(key string, fallback bool) bool {
 	}
 	return boolVal
 }
+
+func getSOmething(asd int) int {
+	return 24
+}
