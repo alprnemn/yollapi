@@ -1,13 +1,11 @@
 package main
 
 import (
-	"net/http"
-
 	u "github.com/alprnemn/yollapi/cmd/api/utils"
-
 	cmn "github.com/alprnemn/yollapi/common"
 	"github.com/alprnemn/yollapi/internal/domain"
 	v "github.com/alprnemn/yollapi/pkg/validator"
+	"net/http"
 )
 
 // registerUserHandler godoc

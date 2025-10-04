@@ -37,12 +37,10 @@ type RLConfig struct {
 var Envs = initConfig()
 
 func initConfig() Config {
-
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("error occurred while getting envs")
 	}
-
 	return Config{
 		Address: GetString("ADDRESS", ":8080"),
 		ApiURL:  GetString("PUBLIC_HOST", "http://127.0.0.1"),
@@ -62,5 +60,4 @@ func initConfig() Config {
 			Enabled:              GetBool("RATE_LIMITER_ENABLED", true),
 		},
 	}
-
 }
