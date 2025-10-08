@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
+
 	u "github.com/alprnemn/yollapi/cmd/api/utils"
 	cmn "github.com/alprnemn/yollapi/common"
 	"github.com/alprnemn/yollapi/internal/domain"
 	v "github.com/alprnemn/yollapi/pkg/validator"
-	"net/http"
 )
 
 // registerUserHandler godoc
@@ -29,6 +31,8 @@ func (app *api) registerUserHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	fmt.Println("payload age : ", *payload.Age)
+
 	if err := v.ValidatePayload(payload); err != nil {
 		u.BadRequestResponse(w, req, err)
 		return
@@ -43,7 +47,7 @@ func (app *api) registerUserHandler(w http.ResponseWriter, req *http.Request) {
 		Email:     payload.Email,
 		Phone:     payload.Phone,
 		Password:  payload.Password,
-		Age:       payload.Age,
+		Age:       *payload.Age,
 	}
 
 	if err := app.Service.User.Register(ctx, newUser); err != nil {

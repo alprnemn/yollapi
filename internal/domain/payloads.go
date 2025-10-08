@@ -7,5 +7,5 @@ type RegisterUserPayload struct {
 	Email     string `json:"email,omitempty" validate:"required,email,max=55"`
 	Phone     string `json:"phone,omitempty" validate:"required,min=9,max=15"`
 	Password  string `json:"password,omitempty" validate:"required,min=8,max=25"`
-	Age       uint8  `json:"age,omitempty" validate:"gte=14,lte=100"`
+	Age       *uint8 `json:"age,omitempty" validate:"omitempty,gte=14,lte=100"`
 }

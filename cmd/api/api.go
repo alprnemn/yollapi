@@ -3,10 +3,11 @@ package main
 import (
 	"database/sql"
 	"errors"
-	"github.com/alprnemn/yollapi/internal/ratelimiter"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/alprnemn/yollapi/internal/ratelimiter"
 
 	_ "github.com/alprnemn/yollapi/docs"
 	cfg "github.com/alprnemn/yollapi/internal/config"

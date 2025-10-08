@@ -21,7 +21,6 @@ func ParseJSON(w http.ResponseWriter, req *http.Request, data any) error {
 	decoder := json.NewDecoder(req.Body)
 	decoder.DisallowUnknownFields()
 
-	// Decode into the provided data
 	if err := decoder.Decode(data); err != nil {
 		if errors.Is(err, io.EOF) {
 			return fmt.Errorf("request body must not be empty")

@@ -1,0 +1,12 @@
+POST http://172.17.0.1:8080/v1/users/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "aasdasda",
+  "firstname": "rasdasdn",
+  "lastname": "sasdasd",
+  "email": "alprn@hol.com",
+  "phone": "05555555555",
+  "password": "asdeeeeee",
+  "age" : 16
+}
