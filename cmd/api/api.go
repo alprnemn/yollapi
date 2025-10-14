@@ -58,6 +58,10 @@ func (app *api) mount() http.Handler {
 			r.Get("/", app.getUsersHandler)
 		})
 
+		r.Route("/auth", func(r chi.Router) {
+			r.Post("/login", app.loginHandler)
+		})
+
 	})
 	return r
 }
@@ -71,7 +75,7 @@ func (app *api) run(mux http.Handler) error {
 		ReadTimeout:  time.Second * 10,
 		IdleTimeout:  time.Minute,
 	}
-	log.Printf("server has started at %s", app.Config.Address)
+	log.Printf("server has started at 127.0.0.1%s", app.Config.Address)
 	err := server.ListenAndServe()
 	if !errors.Is(err, http.ErrServerClosed) {
 		return err

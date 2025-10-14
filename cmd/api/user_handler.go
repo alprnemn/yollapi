@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	u "github.com/alprnemn/yollapi/cmd/api/utils"
@@ -31,8 +30,6 @@ func (app *api) registerUserHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	fmt.Println("payload age : ", *payload.Age)
-
 	if err := v.ValidatePayload(payload); err != nil {
 		u.BadRequestResponse(w, req, err)
 		return
@@ -46,8 +43,12 @@ func (app *api) registerUserHandler(w http.ResponseWriter, req *http.Request) {
 		LastName:  payload.Lastname,
 		Email:     payload.Email,
 		Phone:     payload.Phone,
-		Password:  payload.Password,
 		Age:       *payload.Age,
+	}
+
+	if err := newUser.Password.Set(payload.Password); err != nil {
+		u.InternalServerError(w, req, err)
+		return
 	}
 
 	if err := app.Service.User.Register(ctx, newUser); err != nil {
@@ -89,6 +90,47 @@ func (app *api) getUsersHandler(w http.ResponseWriter, req *http.Request) {
 	}
 
 	if err := u.WriteJSON(w, http.StatusOK, users); err != nil {
+		u.InternalServerError(w, req, err)
+		return
+	}
+
+}
+
+func (app *api) loginHandler(w http.ResponseWriter, req *http.Request) {
+
+	type LoginPayload struct {
+		Username string `json:"username,omitempty" validate:"required,min=4,max=20"`
+		Password string `json:"password,omitempty" validate:"required,min=6,max=25"`
+	}
+
+	var payload LoginPayload
+
+	if err := u.ParseJSON(w, req, &payload); err != nil {
+		u.BadRequestResponse(w, req, err)
+		return
+	}
+
+	if err := v.ValidatePayload(payload); err != nil {
+		u.BadRequestResponse(w, req, err)
+		return
+	}
+
+	ctx := req.Context()
+
+	user, err := app.Repository.User.GetByUsername(ctx, payload.Username)
+	if err != nil {
+		u.NotFoundError(w, req, err)
+		return
+	}
+
+	if err := user.Password.Compare(payload.Password); err != nil {
+		u.BadRequestResponse(w, req, err)
+		return
+	}
+
+	if err := u.WriteJSON(w, http.StatusOK, cmn.MessageResponse{
+		Message: "login successfull",
+	}); err != nil {
 		u.InternalServerError(w, req, err)
 		return
 	}

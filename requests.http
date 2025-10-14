@@ -1,12 +1,25 @@
-POST http://172.17.0.1:8080/v1/users/register HTTP/1.1
+### Create user request
+POST http://127.0.0.1:8080/v1/users/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "username": "aasdasda",
-  "firstname": "rasdasdn",
-  "lastname": "sasdasd",
-  "email": "alprn@hol.com",
+  "username": "alperenss",
+  "firstname": "alperen",
+  "lastname": "emin",
+  "email": "alprn@hotmail.com",
   "phone": "05555555555",
-  "password": "asdeeeeee",
-  "age" : 16
+  "password": "abcd123",
+  "age" : 25
+}
+
+### Healthcheck request
+GET http://127.0.0.1:8080/v1/health
+
+### Login user
+POST http://127.0.0.1:8080/v1/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "alperenss",
+  "password": "abcd123s"
 }

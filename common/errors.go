@@ -19,4 +19,7 @@ var (
 	ErrDuplicateUsername = errors.New("username already exists")
 	ErrDuplicateEmail    = errors.New("email already exists")
 	ErrDuplicatePhone    = errors.New("phone already exists")
+
+	ErrGeneratePassword = errors.New("error occurred while generating password")
+	ErrPasswordInvalid  = errors.New("invalid password")
 )

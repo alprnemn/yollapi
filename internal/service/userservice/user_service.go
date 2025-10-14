@@ -14,7 +14,10 @@ type UserService struct {
 func (service *UserService) Register(ctx context.Context, user *domain.User) *cmn.ErrorResponse {
 
 	if err := service.Repo.Create(ctx, user); err != nil {
-		return handleErrorRegister(err)
+		err := handleErrorRegister(err)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

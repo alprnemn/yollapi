@@ -41,7 +41,7 @@ func (repo *UserRepository) Create(ctx context.Context, user *domain.User) error
 		user.Phone,
 		user.Email,
 		user.Age,
-		user.Password,
+		user.Password.Hash,
 	)
 
 	if err != nil {
@@ -78,4 +78,26 @@ func (repo *UserRepository) GetAllUsers(ctx context.Context) ([]domain.User, err
 		return nil, err
 	}
 	return users, nil
+}
+
+func (repo *UserRepository) GetByUsername(ctx context.Context, username string) (*domain.User, error) {
+	query := "SELECT username, first_name, last_name, email, phone,password FROM users WHERE username = $1"
+
+	ctx, cancel := context.WithTimeout(ctx, cmn.QueryTimeoutDuration)
+	defer cancel()
+
+	user := &domain.User{}
+	err := repo.Db.QueryRowContext(ctx, query, username).Scan(
+		&user.Username,
+		&user.FirstName,
+		&user.LastName,
+		&user.Email,
+		&user.Phone,
+		&user.Password.Hash,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
