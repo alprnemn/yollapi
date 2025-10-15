@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/alprnemn/yollapi/internal/auth"
 	cfg "github.com/alprnemn/yollapi/internal/config"
 	database "github.com/alprnemn/yollapi/internal/db"
 	"github.com/alprnemn/yollapi/internal/ratelimiter"
@@ -36,12 +37,18 @@ func main() {
 	repo := repository.NewRepository(db)
 	services := service.NewService(repo)
 
+	authenticator := auth.NewJWTAuthenticator(
+		cfg.Envs.JWTConfig.Secret,
+		cfg.Envs.JWTConfig.Issuer,
+		cfg.Envs.JWTConfig.Issuer)
+
 	app := &api{
 		Config:      cfg.Envs,
 		Repository:  repo,
 		Service:     services,
 		Db:          db,
 		RateLimiter: rateLimiter,
+		Auth:        authenticator,
 	}
 
 	mux := app.mount()

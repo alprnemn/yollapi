@@ -81,13 +81,14 @@ func (repo *UserRepository) GetAllUsers(ctx context.Context) ([]domain.User, err
 }
 
 func (repo *UserRepository) GetByUsername(ctx context.Context, username string) (*domain.User, error) {
-	query := "SELECT username, first_name, last_name, email, phone,password FROM users WHERE username = $1"
+	query := "SELECT id,username, first_name, last_name, email, phone,password FROM users WHERE username = $1"
 
 	ctx, cancel := context.WithTimeout(ctx, cmn.QueryTimeoutDuration)
 	defer cancel()
 
 	user := &domain.User{}
 	err := repo.Db.QueryRowContext(ctx, query, username).Scan(
+		&user.ID,
 		&user.Username,
 		&user.FirstName,
 		&user.LastName,

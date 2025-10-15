@@ -14,10 +14,17 @@ type Config struct {
 	DbConfig    DbConfig
 	CORS        CorsConfig
 	RateLimiter RLConfig
+	JWTConfig   JWTConfig
 }
 
 type CorsConfig struct {
 	AllowedOrigin string
+}
+
+type JWTConfig struct {
+	Secret string
+	Exp    time.Duration
+	Issuer string
 }
 
 type DbConfig struct {
@@ -40,7 +47,7 @@ func initConfig() Config {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("error occurred while getting envs")
 	}
-
+	
 	return Config{
 		Address: GetString("ADDRESS", ":8080"),
 		ApiURL:  GetString("PUBLIC_HOST", "http://127.0.0.1"),
@@ -58,6 +65,11 @@ func initConfig() Config {
 			RequestsPerTimeFrame: 1,
 			TimeFrame:            3 * time.Second,
 			Enabled:              GetBool("RATE_LIMITER_ENABLED", true),
+		},
+		JWTConfig: JWTConfig{
+			Secret: GetString("JWT_SECRET_KEY", "dddddd"),
+			Issuer: GetString("JWT_ISSUER", "ISSUER"),
+			Exp:    time.Second * time.Duration(GetInt("JWT_EXP_SECOND", 15)),
 		},
 	}
 }

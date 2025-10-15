@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"github.com/alprnemn/yollapi/internal/auth"
 	"log"
 	"net/http"
 	"time"
@@ -25,6 +26,7 @@ type api struct {
 	Service     *service.Service
 	Db          *sql.DB
 	RateLimiter *ratelimiter.FixedWindowRateLimiter
+	Auth        *auth.JWTAuthenticator
 }
 
 func (app *api) mount() http.Handler {
@@ -55,7 +57,11 @@ func (app *api) mount() http.Handler {
 
 		r.Route("/users", func(r chi.Router) {
 			r.Post("/register", app.registerUserHandler)
-			r.Get("/", app.getUsersHandler)
+
+			r.Group(func(r chi.Router) {
+				r.Use(app.AuthMiddleware)
+				r.Get("/", app.getUsersHandler)
+			})
 		})
 
 		r.Route("/auth", func(r chi.Router) {

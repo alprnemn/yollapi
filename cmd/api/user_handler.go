@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
+	"github.com/golang-jwt/jwt/v5"
 	"net/http"
+	"time"
 
 	u "github.com/alprnemn/yollapi/cmd/api/utils"
 	cmn "github.com/alprnemn/yollapi/common"
@@ -98,12 +101,7 @@ func (app *api) getUsersHandler(w http.ResponseWriter, req *http.Request) {
 
 func (app *api) loginHandler(w http.ResponseWriter, req *http.Request) {
 
-	type LoginPayload struct {
-		Username string `json:"username,omitempty" validate:"required,min=4,max=20"`
-		Password string `json:"password,omitempty" validate:"required,min=6,max=25"`
-	}
-
-	var payload LoginPayload
+	var payload domain.LoginPayload
 
 	if err := u.ParseJSON(w, req, &payload); err != nil {
 		u.BadRequestResponse(w, req, err)
@@ -122,15 +120,29 @@ func (app *api) loginHandler(w http.ResponseWriter, req *http.Request) {
 		u.NotFoundError(w, req, err)
 		return
 	}
+	fmt.Println("user id: ", user.ID)
 
 	if err := user.Password.Compare(payload.Password); err != nil {
 		u.BadRequestResponse(w, req, err)
 		return
 	}
 
-	if err := u.WriteJSON(w, http.StatusOK, cmn.MessageResponse{
-		Message: "login successfull",
-	}); err != nil {
+	claims := jwt.MapClaims{
+		"sub": user.ID,
+		"exp": time.Now().Add(app.Config.JWTConfig.Exp).Unix(),
+		"iat": time.Now().Unix(),
+		"nbf": time.Now().Unix(),
+		"iss": app.Config.JWTConfig.Issuer,
+		"aud": app.Config.JWTConfig.Issuer,
+	}
+
+	token, err := app.Auth.GenerateToken(claims)
+	if err != nil {
+		u.InternalServerError(w, req, err)
+		return
+	}
+
+	if err := u.WriteJSON(w, http.StatusOK, map[string]string{"token": token}); err != nil {
 		u.InternalServerError(w, req, err)
 		return
 	}

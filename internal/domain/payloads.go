@@ -9,3 +9,8 @@ type RegisterUserPayload struct {
 	Password  string `json:"password,omitempty" validate:"required,min=6,max=25"`
 	Age       *uint8 `json:"age,omitempty" validate:"omitempty,gte=14,lte=100"`
 }
+
+type LoginPayload struct {
+	Username string `json:"username,omitempty" validate:"required,min=4,max=20"`
+	Password string `json:"password,omitempty" validate:"required,min=6,max=25"`
+}
