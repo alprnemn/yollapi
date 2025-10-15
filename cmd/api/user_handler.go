@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 
 	u "github.com/alprnemn/yollapi/cmd/api/utils"
 	cmn "github.com/alprnemn/yollapi/common"
@@ -99,6 +100,17 @@ func (app *api) getUsersHandler(w http.ResponseWriter, req *http.Request) {
 
 }
 
+// @Summary		login a user
+// @Description	Auth a new user account with the provided information
+// @Tags			auth
+// @Accept			json
+// @Produce		json
+// @Param			payload	body		domain.LoginPayload	true	"User registration data"
+// @Success		200		{string}	map[string]string	"token"
+// @Failure		400		{string}	string				"Bad Request"
+// @Failure		404		{string}	string				"Not Found"
+// @Failure		500		{string}	string				"Internal Server Error"
+// @Router			/v1/auth/login [post]
 func (app *api) loginHandler(w http.ResponseWriter, req *http.Request) {
 
 	var payload domain.LoginPayload

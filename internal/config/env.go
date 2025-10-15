@@ -47,7 +47,7 @@ func initConfig() Config {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("error occurred while getting envs")
 	}
-	
+
 	return Config{
 		Address: GetString("ADDRESS", ":8080"),
 		ApiURL:  GetString("PUBLIC_HOST", "http://127.0.0.1"),

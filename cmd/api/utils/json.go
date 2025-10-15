@@ -12,10 +12,14 @@ import (
 
 func ParseJSON(w http.ResponseWriter, req *http.Request, data any) error {
 
+	if req.Header.Get("Content-Type") != "application/json" {
+		return errors.New("content type must be application/json")
+	}
+
 	req.Body = http.MaxBytesReader(w, req.Body, int64(cmn.MaxBytes))
 
 	if req.Body == nil {
-		return fmt.Errorf("missing request body")
+		return errors.New("missing request body")
 	}
 
 	decoder := json.NewDecoder(req.Body)

@@ -22,4 +22,7 @@ var (
 
 	ErrGeneratePassword = errors.New("error occurred while generating password")
 	ErrPasswordInvalid  = errors.New("invalid password")
+
+	ErrMissingAuthHeader = errors.New("missing Authorization header")
+	ErrWrongAuthHeader   = errors.New("wrong Authorization header value")
 )

@@ -2,9 +2,10 @@ package domain
 
 import (
 	"context"
+	"time"
+
 	cmn "github.com/alprnemn/yollapi/common"
 	"github.com/golang-jwt/jwt/v5"
-	"time"
 )
 
 type Authenticator interface {

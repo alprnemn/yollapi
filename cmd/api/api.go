@@ -3,10 +3,11 @@ package main
 import (
 	"database/sql"
 	"errors"
-	"github.com/alprnemn/yollapi/internal/auth"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/alprnemn/yollapi/internal/auth"
 
 	"github.com/alprnemn/yollapi/internal/ratelimiter"
 
@@ -53,7 +54,7 @@ func (app *api) mount() http.Handler {
 		r.Get("/health", app.healthCheckHandler)
 
 		//docsURL := "http://127.0.0.1:8080/swagger/doc.json"
-		r.Handle("/swagger/*", httpSwagger.WrapHandler)
+		r.Get("/swagger/*", httpSwagger.WrapHandler)
 
 		r.Route("/users", func(r chi.Router) {
 			r.Post("/register", app.registerUserHandler)
