@@ -7,7 +7,6 @@ import (
 	"github.com/alprnemn/yollapi/internal/ratelimiter"
 	"github.com/alprnemn/yollapi/internal/repository"
 	"github.com/alprnemn/yollapi/internal/service"
-
 	"log"
 )
 
@@ -52,6 +51,8 @@ func main() {
 	}
 
 	mux := app.mount()
-	log.Fatal(app.run(mux))
+	if err := app.run(mux); err != nil {
+		log.Fatal("server error:", err)
+	}
 
 }

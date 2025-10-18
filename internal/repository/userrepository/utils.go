@@ -3,11 +3,11 @@ package userrepository
 import (
 	"database/sql"
 
-	"github.com/alprnemn/yollapi/internal/domain"
+	"github.com/alprnemn/yollapi/internal/models"
 )
 
-func extractUsersFromRows(rows *sql.Rows) ([]domain.User, error) {
-	var users []domain.User
+func extractUsersFromRows(rows *sql.Rows) ([]models.User, error) {
+	var users []models.User
 	var username string
 	var firstName string
 	var lastName string
@@ -18,7 +18,7 @@ func extractUsersFromRows(rows *sql.Rows) ([]domain.User, error) {
 		if err := rows.Scan(&username, &firstName, &lastName, &email, &phone); err != nil {
 			return nil, err
 		}
-		users = append(users, domain.User{
+		users = append(users, models.User{
 			Username:  username,
 			FirstName: firstName,
 			LastName:  lastName,

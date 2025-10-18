@@ -3,13 +3,13 @@ package productservice
 import (
 	"context"
 
-	"github.com/alprnemn/yollapi/internal/domain"
+	"github.com/alprnemn/yollapi/internal/models"
 )
 
 type ProductService struct {
-	Repo domain.IProductRepository
+	Repo models.IProductRepository
 }
 
-func (service *ProductService) Add(ctx context.Context, product *domain.Product) error {
+func (service *ProductService) Add(ctx context.Context, product *models.Product) error {
 	return nil
 }

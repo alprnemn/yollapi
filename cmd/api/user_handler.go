@@ -9,9 +9,14 @@ import (
 
 	u "github.com/alprnemn/yollapi/cmd/api/utils"
 	cmn "github.com/alprnemn/yollapi/common"
-	"github.com/alprnemn/yollapi/internal/domain"
+	m "github.com/alprnemn/yollapi/internal/models"
 	v "github.com/alprnemn/yollapi/pkg/validator"
 )
+
+func getUserFromContext(r *http.Request) *m.User {
+	user, _ := r.Context().Value(cmn.UserCtx).(*m.User)
+	return user
+}
 
 // registerUserHandler godoc
 //
@@ -20,14 +25,14 @@ import (
 //	@Tags			users
 //	@Accept			json
 //	@Produce		json
-//	@Param			payload	body		domain.RegisterUserPayload	true	"User registration data"
+//	@Param			payload	body		models.RegisterUserPayload	true	"User registration data"
 //	@Success		201		{string}	common.MessageResponse		"user created succesfully"
 //	@Failure		400		{string}	string						"Bad Request"
 //	@Failure		500		{string}	string						"Internal Server Error"
 //	@Router			/v1/users/register [post]
 func (app *api) registerUserHandler(w http.ResponseWriter, req *http.Request) {
 
-	var payload domain.RegisterUserPayload
+	var payload m.RegisterUserPayload
 
 	if err := u.ParseJSON(w, req, &payload); err != nil {
 		u.BadRequestResponse(w, req, err)
@@ -41,7 +46,7 @@ func (app *api) registerUserHandler(w http.ResponseWriter, req *http.Request) {
 
 	ctx := req.Context()
 
-	newUser := &domain.User{
+	newUser := &m.User{
 		Username:  payload.Username,
 		FirstName: payload.Firstname,
 		LastName:  payload.Lastname,
@@ -80,12 +85,14 @@ func (app *api) registerUserHandler(w http.ResponseWriter, req *http.Request) {
 //	@Tags			users
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{string}	[]domain.User
+//	@Success		200	{string}	[]m.User
 //	@Failure		500	{string}	string	"Internal Server Error"
 //	@Router			/v1/users [get]
 func (app *api) getUsersHandler(w http.ResponseWriter, req *http.Request) {
 
 	ctx := req.Context()
+
+	fmt.Println("who sent request: ", getUserFromContext(req))
 
 	users, err := app.Service.User.GetAllUsers(ctx)
 	if err != nil {
@@ -105,7 +112,7 @@ func (app *api) getUsersHandler(w http.ResponseWriter, req *http.Request) {
 // @Tags			auth
 // @Accept			json
 // @Produce		json
-// @Param			payload	body		domain.LoginPayload	true	"User registration data"
+// @Param			payload	body		m.LoginPayload	true	"User registration data"
 // @Success		200		{string}	map[string]string	"token"
 // @Failure		400		{string}	string				"Bad Request"
 // @Failure		404		{string}	string				"Not Found"
@@ -113,7 +120,7 @@ func (app *api) getUsersHandler(w http.ResponseWriter, req *http.Request) {
 // @Router			/v1/auth/login [post]
 func (app *api) loginHandler(w http.ResponseWriter, req *http.Request) {
 
-	var payload domain.LoginPayload
+	var payload m.LoginPayload
 
 	if err := u.ParseJSON(w, req, &payload); err != nil {
 		u.BadRequestResponse(w, req, err)

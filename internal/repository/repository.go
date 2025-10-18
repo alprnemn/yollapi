@@ -3,14 +3,14 @@ package repository
 import (
 	"database/sql"
 
-	"github.com/alprnemn/yollapi/internal/domain"
+	"github.com/alprnemn/yollapi/internal/models"
 	pr "github.com/alprnemn/yollapi/internal/repository/productrepository"
 	ur "github.com/alprnemn/yollapi/internal/repository/userrepository"
 )
 
 type Repository struct {
-	User    domain.IUserRepository
-	Product domain.IProductRepository
+	User    models.IUserRepository
+	Product models.IProductRepository
 }
 
 func NewRepository(db *sql.DB) *Repository {

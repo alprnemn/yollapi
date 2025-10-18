@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	cmn "github.com/alprnemn/yollapi/common"
-	"github.com/alprnemn/yollapi/internal/domain"
+	m "github.com/alprnemn/yollapi/internal/models"
 	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 )
@@ -16,7 +16,7 @@ type UserRepository struct {
 	Db *sql.DB
 }
 
-func (repo *UserRepository) Create(ctx context.Context, user *domain.User) error {
+func (repo *UserRepository) Create(ctx context.Context, user *m.User) error {
 
 	query := `INSERT INTO users (
     first_name,
@@ -61,7 +61,7 @@ func (repo *UserRepository) Create(ctx context.Context, user *domain.User) error
 	return nil
 }
 
-func (repo *UserRepository) GetAllUsers(ctx context.Context) ([]domain.User, error) {
+func (repo *UserRepository) GetAllUsers(ctx context.Context) ([]m.User, error) {
 
 	query := `SELECT  username, first_name, last_name, email, phone FROM users`
 
@@ -80,13 +80,13 @@ func (repo *UserRepository) GetAllUsers(ctx context.Context) ([]domain.User, err
 	return users, nil
 }
 
-func (repo *UserRepository) GetByUsername(ctx context.Context, username string) (*domain.User, error) {
+func (repo *UserRepository) GetByUsername(ctx context.Context, username string) (*m.User, error) {
 	query := "SELECT id,username, first_name, last_name, email, phone,password FROM users WHERE username = $1"
 
 	ctx, cancel := context.WithTimeout(ctx, cmn.QueryTimeoutDuration)
 	defer cancel()
 
-	user := &domain.User{}
+	user := &m.User{}
 	err := repo.Db.QueryRowContext(ctx, query, username).Scan(
 		&user.ID,
 		&user.Username,
@@ -101,4 +101,27 @@ func (repo *UserRepository) GetByUsername(ctx context.Context, username string) 
 	}
 
 	return user, nil
+}
+
+func (repo *UserRepository) GetByID(ctx context.Context, userID int64) (*m.User, error) {
+
+	query := "SELECT id,username, first_name, last_name, email FROM users WHERE id = $1"
+
+	ctx, cancel := context.WithTimeout(ctx, cmn.QueryTimeoutDuration)
+	defer cancel()
+
+	user := &m.User{}
+	err := repo.Db.QueryRowContext(ctx, query, userID).Scan(
+		&user.ID,
+		&user.Username,
+		&user.FirstName,
+		&user.LastName,
+		&user.Email,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+
 }

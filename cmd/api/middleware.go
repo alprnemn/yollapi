@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	cmn "github.com/alprnemn/yollapi/common"
 	"net/http"
+	"strconv"
 	"strings"
 
 	u "github.com/alprnemn/yollapi/cmd/api/utils"
@@ -43,7 +45,23 @@ func (app *api) AuthMiddleware(next http.Handler) http.Handler {
 		}
 
 		claims, _ := token.Claims.(jwt.MapClaims)
-		fmt.Println("claims: ", claims)
-		next.ServeHTTP(w, req)
+
+		userID, err := strconv.ParseInt(fmt.Sprintf("%.f", claims["sub"]), 10, 64)
+		if err != nil {
+			u.UnauthorizedError(w, req, err)
+			return
+		}
+
+		ctx := req.Context()
+
+		user, err := app.Repository.User.GetByID(ctx, userID)
+		if err != nil {
+			u.UnauthorizedError(w, req, err)
+			return
+		}
+
+		ctx = context.WithValue(ctx, cmn.UserCtx, user)
+		next.ServeHTTP(w, req.WithContext(ctx))
+
 	})
 }

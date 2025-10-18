@@ -4,14 +4,14 @@ import (
 	"context"
 
 	cmn "github.com/alprnemn/yollapi/common"
-	"github.com/alprnemn/yollapi/internal/domain"
+	m "github.com/alprnemn/yollapi/internal/models"
 )
 
 type UserService struct {
-	Repo domain.IUserRepository
+	Repo m.IUserRepository
 }
 
-func (service *UserService) Register(ctx context.Context, user *domain.User) *cmn.ErrorResponse {
+func (service *UserService) Register(ctx context.Context, user *m.User) *cmn.ErrorResponse {
 
 	if err := service.Repo.Create(ctx, user); err != nil {
 		err := handleErrorRegister(err)
@@ -22,7 +22,7 @@ func (service *UserService) Register(ctx context.Context, user *domain.User) *cm
 	return nil
 }
 
-func (service *UserService) GetAllUsers(ctx context.Context) ([]domain.User, error) {
+func (service *UserService) GetAllUsers(ctx context.Context) ([]m.User, error) {
 
 	users, err := service.Repo.GetAllUsers(ctx)
 	if err != nil {

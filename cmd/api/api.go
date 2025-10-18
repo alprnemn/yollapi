@@ -1,10 +1,14 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/alprnemn/yollapi/internal/auth"
@@ -82,11 +86,36 @@ func (app *api) run(mux http.Handler) error {
 		ReadTimeout:  time.Second * 10,
 		IdleTimeout:  time.Minute,
 	}
+
+	shutdown := make(chan error)
+
+	go func() {
+		quit := make(chan os.Signal, 1)
+
+		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+		s := <-quit
+
+		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+		defer cancel()
+
+		log.Println("signal caught", " signal", s.String())
+
+		shutdown <- server.Shutdown(ctx)
+	}()
+
 	log.Printf("server has started at 127.0.0.1%s", app.Config.Address)
+
 	err := server.ListenAndServe()
 	if !errors.Is(err, http.ErrServerClosed) {
 		return err
 	}
+
+	err = <-shutdown
+	if err != nil {
+		return err
+	}
+
+	log.Printf("server has stopped at 127.0.0.1%s", app.Config.Address)
 
 	return nil
 }

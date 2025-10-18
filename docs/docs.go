@@ -36,7 +36,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.LoginPayload"
+                            "$ref": "#/definitions/models.LoginPayload"
                         }
                     }
                 ],
@@ -117,7 +117,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.RegisterUserPayload"
+                            "$ref": "#/definitions/models.RegisterUserPayload"
                         }
                     }
                 ],
@@ -145,7 +145,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "domain.LoginPayload": {
+        "models.LoginPayload": {
             "type": "object",
             "required": [
                 "password",
@@ -164,7 +164,7 @@ const docTemplate = `{
                 }
             }
         },
-        "domain.RegisterUserPayload": {
+        "models.RegisterUserPayload": {
             "type": "object",
             "required": [
                 "email",
