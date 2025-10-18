@@ -1,3 +1,6 @@
+# Go build output
+/bin/
+
 # Binaries
 *.exe
 *.out
@@ -11,3 +14,7 @@ http-client.env.json
 .vscode/
 .idea/
 .DS_Store
+
+# Logs and temporary files
+*.log
+*.tmp
