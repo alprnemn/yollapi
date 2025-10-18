@@ -1,2 +1,2 @@
 .env
-./requests/http-client.env.json
+requests/http-client.env.json
