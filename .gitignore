@@ -1,2 +1,13 @@
+# Binaries
+*.exe
+*.out
+
+# Environment
 .env
 requests/http-client.env.json
+http-client.env.json
+
+# IDE and system files
+.vscode/
+.idea/
+.DS_Store
