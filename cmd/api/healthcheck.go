@@ -2,17 +2,15 @@ package main
 
 import (
 	"fmt"
-	"net/http"
-
 	"github.com/alprnemn/yollapi/cmd/api/utils"
+	"net/http"
 )
 
 func (app *api) healthCheckHandler(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("health")
-	err := utils.WriteJSON(w, http.StatusOK, map[string]string{
+	if err := utils.WriteJSON(w, http.StatusOK, map[string]string{
 		"message": "ok",
-	})
-	if err != nil {
+	}); err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, "internal server error")
 	}
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"github.com/alprnemn/yollapi/internal/cache"
 	"log"
 	"net/http"
 	"os"
@@ -32,6 +33,7 @@ type api struct {
 	Db          *sql.DB
 	RateLimiter *ratelimiter.FixedWindowRateLimiter
 	Auth        *auth.JWTAuthenticator
+	Cache       cache.RedisRepository
 }
 
 func (app *api) mount() http.Handler {
@@ -57,7 +59,6 @@ func (app *api) mount() http.Handler {
 	r.Route("/v1", func(r chi.Router) {
 		r.Get("/health", app.healthCheckHandler)
 
-		//docsURL := "http://127.0.0.1:8080/swagger/doc.json"
 		r.Get("/swagger/*", httpSwagger.WrapHandler)
 
 		r.Route("/users", func(r chi.Router) {

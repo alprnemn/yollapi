@@ -36,3 +36,9 @@ type IProductService interface {
 type IRateLimiter interface {
 	Allow(ip string) (bool, time.Duration)
 }
+
+type ICacheUserRepository interface {
+	Get()
+	Set()
+	Delete()
+}

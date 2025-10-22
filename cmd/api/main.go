@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/alprnemn/yollapi/internal/auth"
+	"github.com/alprnemn/yollapi/internal/cache"
 	cfg "github.com/alprnemn/yollapi/internal/config"
 	database "github.com/alprnemn/yollapi/internal/db"
 	"github.com/alprnemn/yollapi/internal/ratelimiter"
@@ -41,6 +42,13 @@ func main() {
 		cfg.Envs.JWTConfig.Issuer,
 		cfg.Envs.JWTConfig.Issuer)
 
+	redisClient := cache.NewRedisClient(
+		cfg.Envs.RedisConfig.Address,
+		cfg.Envs.RedisConfig.Password,
+		cfg.Envs.RedisConfig.DB)
+
+	redisRepository := cache.NewRedisRepository(redisClient)
+
 	app := &api{
 		Config:      cfg.Envs,
 		Repository:  repo,
@@ -48,6 +56,7 @@ func main() {
 		Db:          db,
 		RateLimiter: rateLimiter,
 		Auth:        authenticator,
+		Cache:       redisRepository,
 	}
 
 	mux := app.mount()

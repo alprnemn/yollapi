@@ -15,6 +15,15 @@ type Config struct {
 	CORS        CorsConfig
 	RateLimiter RLConfig
 	JWTConfig   JWTConfig
+	RedisConfig RedisConfig
+}
+
+type RedisConfig struct {
+	Address  string
+	Username string
+	Password string
+	DB       int
+	Enabled  bool
 }
 
 type CorsConfig struct {
@@ -70,6 +79,13 @@ func initConfig() Config {
 			Secret: GetString("JWT_SECRET_KEY", "dddddd"),
 			Issuer: GetString("JWT_ISSUER", "ISSUER"),
 			Exp:    time.Second * time.Duration(GetInt("JWT_EXP_SECOND", 15)),
+		},
+		RedisConfig: RedisConfig{
+			Address:  GetString("REDIS_ADDRESS", "localhost:6379"),
+			Username: GetString("REDIS_USER", "asdasd"),
+			Password: GetString("REDIS_PASSWORD", "123124"),
+			DB:       0,
+			Enabled:  GetBool("REDIS_ENABLED", false),
 		},
 	}
 }

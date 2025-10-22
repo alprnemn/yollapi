@@ -61,10 +61,6 @@ func WriteError(w http.ResponseWriter, status int, message string) {
 	_ = WriteJSON(w, status, resp)
 }
 
-func JsonResponse(w http.ResponseWriter, status int, data any) error {
-	return WriteJSON(w, status, data)
-}
-
 func WriteJSON(w http.ResponseWriter, status int, data any) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)

@@ -1,0 +1,9 @@
+Seperate server and handlers,-
+User registiration with tx and mail send, -
+Implement redis with docker, -
+Use redis on middleware to catch user quickly, -
+Make unit tests and endpoint tests, -
+Make docker file faster 20mb instead 800mb, -
+Make faster db using indexes, -
+İmplements server metrics, -
+Improve api security, -
