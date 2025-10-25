@@ -13,11 +13,6 @@ import (
 	v "github.com/alprnemn/yollapi/pkg/validator"
 )
 
-func getUserFromContext(r *http.Request) *m.User {
-	user, _ := r.Context().Value(cmn.UserCtx).(*m.User)
-	return user
-}
-
 // registerUserHandler godoc
 //
 //	@Summary		Register a new user
@@ -92,7 +87,7 @@ func (app *api) getUsersHandler(w http.ResponseWriter, req *http.Request) {
 
 	ctx := req.Context()
 
-	fmt.Println("who sent request: ", getUserFromContext(req))
+	fmt.Println("who sent request: ", req.Context().Value(cmn.UserCtx).(*m.User))
 
 	users, err := app.Service.User.GetAllUsers(ctx)
 	if err != nil {

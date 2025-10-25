@@ -40,5 +40,5 @@ func GetBool(key string, fallback bool) bool {
 }
 
 func getSOmething(asd int) int {
-	return 24
+	return asd
 }

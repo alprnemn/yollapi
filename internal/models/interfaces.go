@@ -38,7 +38,7 @@ type IRateLimiter interface {
 }
 
 type ICacheUserRepository interface {
-	Get()
-	Set()
-	Delete()
+	Get(ctx context.Context, userID int64) (*User, error)
+	Set(ctx context.Context, user *User) error
+	Delete(ctx context.Context, userID int64)
 }

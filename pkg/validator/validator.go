@@ -22,7 +22,7 @@ func ValidatePayload(payload any) error {
 
 		var verr validator.ValidationErrors
 
-		fields_tags := []string{}
+		var fieldsTags []string
 
 		if errors.As(err, &verr) {
 			fmt.Println("len errors: ", len(verr))
@@ -32,11 +32,11 @@ func ValidatePayload(payload any) error {
 					v.Field(),
 					v.Tag(),
 				)
-				fields_tags = append(fields_tags, msg)
+				fieldsTags = append(fieldsTags, msg)
 			}
 
 			// v := verr[0]
-			return errors.New(strings.Join(fields_tags, ","))
+			return errors.New(strings.Join(fieldsTags, ","))
 		}
 
 		return fmt.Errorf("validation failed: %w", err)

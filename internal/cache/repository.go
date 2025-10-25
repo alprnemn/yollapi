@@ -11,6 +11,6 @@ type RedisRepository struct {
 
 func NewRedisRepository(rdb *redis.Client) RedisRepository {
 	return RedisRepository{
-		User: &UserRepository{rdb: rdb},
+		User: &UserCacheRepository{rdb: rdb},
 	}
 }
